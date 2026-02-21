@@ -1,0 +1,21 @@
+[Unit]
+Description=mars-pi grow tent monitoring server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# ── Change 'pi' below to your Pi username if different ──
+User=pi
+WorkingDirectory=/home/pi/mars-pi
+ExecStart=/home/pi/mars-pi/venv/bin/python server.py
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+# Give the camera time to initialise before the first restart attempt
+TimeoutStartSec=30
+
+[Install]
+WantedBy=multi-user.target
+

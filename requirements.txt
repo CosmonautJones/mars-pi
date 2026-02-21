@@ -1,0 +1,16 @@
+# mars-pi Python dependencies
+# Install on the Pi with:  pip install -r requirements.txt
+
+# --- Web server ---
+flask>=3.0,<4
+flask-cors>=4.0,<5
+
+# --- Camera (pre-installed on Raspberry Pi OS, listed for completeness) ---
+# picamera2 is typically installed via:  sudo apt install python3-picamera2
+# Uncomment the line below ONLY if installing in a venv without system packages
+# picamera2>=0.3
+
+# --- Sensors (add when hardware arrives) ---
+# smbus2>=0.4          # I2C communication
+# bme280>=0.0.1        # BME280 temperature/humidity/pressure driver
+
