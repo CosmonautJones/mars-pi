@@ -11,12 +11,16 @@ Endpoints:
 import logging
 import signal
 import sys
-from flask import Flask, Response, jsonify, abort
+from flask import Flask, Response, jsonify, abort, request
 from flask_cors import CORS
+from google.oauth2 import id_token as google_id_token
+from google.auth.transport.requests import Request as GoogleRequest
 
 import camera.config as cfg
 from camera.stream import camera_stream
 from sensors import read_sensors
+
+_google_request = GoogleRequest()
 
 logging.basicConfig(
     level=logging.INFO,
@@ -27,6 +31,29 @@ log = logging.getLogger("mars-pi")
 
 app = Flask(__name__)
 CORS(app, origins=cfg.CORS_ORIGINS)
+
+
+# ---------------------------------------------------------------------------
+# Auth helpers
+# ---------------------------------------------------------------------------
+
+def _check_firebase_token():
+    """Verify a Firebase ID token passed as ?token= in the query string.
+
+    Raises 401 if no token is provided, 403 if the token is invalid or expired.
+    The token is a short-lived (1 h) JWT signed by Google; the client refreshes
+    it every 55 minutes via user.getIdToken().
+    """
+    token = request.args.get('token', '')
+    if not token:
+        abort(401, description="Authentication required.")
+    try:
+        google_id_token.verify_firebase_token(
+            token, _google_request, audience=cfg.FIREBASE_PROJECT_ID
+        )
+    except Exception as exc:
+        log.warning("Token verification failed: %s", exc)
+        abort(403, description="Invalid or expired token.")
 
 
 # ---------------------------------------------------------------------------
@@ -50,6 +77,7 @@ def _mjpeg_generator():
 @app.route("/stream")
 def stream():
     """MJPEG live stream — works as an <img> src in any browser."""
+    _check_firebase_token()
     if not camera_stream.is_running:
         abort(503, description="Camera not running.")
     return Response(
@@ -61,6 +89,7 @@ def stream():
 @app.route("/snapshot")
 def snapshot():
     """Return a single high-resolution JPEG capture."""
+    _check_firebase_token()
     if not camera_stream.is_running:
         abort(503, description="Camera not running.")
     try:

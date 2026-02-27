@@ -4,5 +4,28 @@ __pycache__/
 *.pyo
 .env
 *.log
+
+# One-off setup/debugging scripts
 do_setup.sh
+*.ps1
+cf_login.sh
+check_caddy.sh
+check_network.sh
+check_service_path.sh
+check_services.sh
+deploy_firebase_auth.sh
+find_dashboard.sh
+fix_ngrok_port.sh
+fix_ngrok_svc.sh
+gen_token.sh
+install_ngrok.sh
+patch_stream_token.sh
+patch_token.sh
+setup_caddy.sh
+setup_ngrok.sh
+show_server.sh
+test_token.sh
+
+# Screenshots
+images/
 

@@ -35,3 +35,7 @@ CORS_ORIGINS = [
     "http://localhost:8000",
 ]
 
+# --- Firebase Auth ---
+# Firebase project ID — used to verify Google ID tokens on the /stream and /snapshot routes.
+FIREBASE_PROJECT_ID = 'grow-tracker-3fef2'
+
