@@ -10,7 +10,6 @@ flask-cors>=4.0,<5
 # Uncomment the line below ONLY if installing in a venv without system packages
 # picamera2>=0.3
 
-# --- Sensors (add when hardware arrives) ---
-# smbus2>=0.4          # I2C communication
-# bme280>=0.0.1        # BME280 temperature/humidity/pressure driver
+# --- Sensors ---
+adafruit-circuitpython-bme280>=2.6
 
